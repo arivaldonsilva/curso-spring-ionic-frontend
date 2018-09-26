@@ -12,10 +12,12 @@ export class HomePage {
 
   }
 
+  // Desabilita a arraste do menu quando entra na página de login
   ionViewWillEnter(){
     this.menu.swipeEnable(false);
   }
 
+  // Quando sai da página de login reabilita o arraste do menu lateral
   ionViewDidLeave(){
     this.menu.swipeEnable(true);
   }

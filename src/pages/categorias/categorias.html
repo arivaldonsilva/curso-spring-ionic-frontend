@@ -10,5 +10,28 @@
 
 
 <ion-content padding>
-  <p>Página de categorias</p>
+  <ion-list *ngFor="let item of items">
+    <button ion-item> 
+      <ion-thumbnail item-start>
+        <img src="{{bucketUrl}}/cat{{item.id}}.jpg">
+      </ion-thumbnail>
+      <h2>{{ item.nome }}</h2>
+    </button>
+  </ion-list>
+
+  <!-- <ion-card *ngFor="let item of items">
+      <button ion-item> 
+    <img src="{{bucketUrl}}/cat{{item.id}}.jpg">
+    <ion-card-content>
+      <ion-card-title>
+        Nine Inch Nails Live
+        </ion-card-title>
+      <p>
+        The most popular industrial group ever, and largely
+        responsible for bringing the music to a mass audience.
+      </p>
+    </ion-card-content>
+    </button>
+  </ion-card> -->
+
 </ion-content>

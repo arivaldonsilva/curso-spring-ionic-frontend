@@ -14,6 +14,7 @@ export class AuthService {
     constructor(public http: HttpClient, public storage: StorageService){
     }
 
+    // recebe email e senha do usuario, tenta autenticar no servidor e retorna um cabeçalho
     authenticate(creds: CredenciaisDTO) {
        return this.http.post(
            `${API_CONFIG.baseUrl}/login`,

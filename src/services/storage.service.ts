@@ -4,13 +4,15 @@ import { STORAGE_KEYS } from "../config/storage_keys.config";
 
 @Injectable()
 export class StorageService {
+
+    // pode retornar nulo ou um localuser se existir no localstorage
     getLocalUser(): LocalUser {
         let usr = localStorage.getItem(STORAGE_KEYS.localUser);
         if(usr == null){
             return null;
         }
         else{
-            JSON.parse(usr);
+            return JSON.parse(usr);
         }
     }
 

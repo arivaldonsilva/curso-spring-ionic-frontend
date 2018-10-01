@@ -15,7 +15,10 @@ export class HomePage {
     senha: ""
   };
 
-  constructor(public navCtrl: NavController, public menu: MenuController, public auth: AuthService) {
+  constructor(
+    public navCtrl: NavController
+    , public menu: MenuController
+    , public auth: AuthService) {
 
   }
 
@@ -37,8 +40,11 @@ export class HomePage {
         // navega para a página de categorias 
         this.navCtrl.setRoot('CategoriasPage');
       },
-    error => {});
-    
+    error => {
+      if(error.status == 401){
+       
+      }
+    });
     console.log(this.creds);
   }
 }

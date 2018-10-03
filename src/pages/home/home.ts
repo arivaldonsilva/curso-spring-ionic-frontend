@@ -32,19 +32,31 @@ export class HomePage {
     this.menu.swipeEnable(true);
   }
 
-  login(){
-    this.auth.authenticate(this.creds)
+  ionViewDidEnter(){
+    this.auth.refreshToken()
       .subscribe(response => {
+        console.log('header pelo refresh token: '+response.headers.get('Authorization'));
+        // salva as credenciais no cliente de forma a atualiza-las
         this.auth.successfullLogin(response.headers.get('Authorization'));
         console.log(response.headers.get('Authorization'));
         // navega para a página de categorias 
         this.navCtrl.setRoot('CategoriasPage');
       },
     error => {
-      if(error.status == 401){
-       
-      }
+      console.log('erro: '+error.status)
     });
-    console.log(this.creds);
+  }
+
+  login(){
+    this.auth.authenticate(this.creds)
+      .subscribe(response => {
+        this.auth.successfullLogin(response.headers.get('Authorization'));
+        console.log('refresh pela autenticacao: '+response.headers.get('Authorization'));
+        // navega para a página de categorias 
+        this.navCtrl.setRoot('CategoriasPage');
+      },
+    error => {
+    });
+   // console.log(this.creds);
   }
 }

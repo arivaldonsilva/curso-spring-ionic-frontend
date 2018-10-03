@@ -26,6 +26,17 @@ export class AuthService {
 
     }
 
+    refreshToken() {
+        return this.http.post(
+            `${API_CONFIG.baseUrl}/auth/refresh_token`,
+            { },
+             {
+                 observe:'response', 
+                 responseType: 'text'
+             });
+ 
+     }
+
 
     // Após passar por authenticate com sucesso, pega a credencial retornada do login e seta 
     // o local storage com o valor da chave de autenticacao

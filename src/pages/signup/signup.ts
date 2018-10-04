@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { CidadeService } from '../../services/domain/cidade.service';
+import { EstadoDTO } from '../../models/estado.dto';
+import { CidadeDTO } from '../../models/cidade.dto';
+import { EstadoService } from '../../services/domain/estado.service';
 
 @IonicPage()
 @Component({
@@ -10,11 +14,44 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 export class SignupPage {
 
   formGroup: FormGroup;
+  estados: EstadoDTO[];
+  cidades: CidadeDTO[];
+
+  ionViewDidLoad(){
+    this.estadoService.findAll()
+    .subscribe(response => {
+      this.estados = response;
+      this.formGroup.controls.estadoId.setValue(this.estados[0].id);
+      this.updateCidades();
+    });
+  }
+
+  updateCidades(){
+    let estado_id = this.formGroup.value.estadoId;
+    this.cidadeService.findAll(estado_id)
+    .subscribe(response => {
+      this.cidades = response;
+      this.formGroup.controls.cidadeId.setValue(null);
+    });
+  }
+
+  // Desabilita a arraste do menu quando entra na página de login
+  ionViewWillEnter(){
+    this.menu.swipeEnable(false);
+  }
+
+  // Quando sai da página de login reabilita o arraste do menu lateral
+  ionViewWillLeave(){
+    this.menu.swipeEnable(true);
+  }
   
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    public formBuilder: FormBuilder) {
+    public formBuilder: FormBuilder,
+    public menu: MenuController,
+    public cidadeService: CidadeService,
+    public estadoService: EstadoService) {
 
       this.formGroup = formBuilder.group({
         nome: ['Luana', [Validators.required, Validators.minLength(5), Validators.maxLength(120)]],
@@ -40,8 +77,6 @@ export class SignupPage {
     console.log("enviou o form");
   }
 
-  public updateCidades(){
 
-  }
 
 }

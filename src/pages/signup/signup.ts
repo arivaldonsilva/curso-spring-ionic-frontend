@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController, AlertController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CidadeService } from '../../services/domain/cidade.service';
 import { EstadoDTO } from '../../models/estado.dto';
 import { CidadeDTO } from '../../models/cidade.dto';
 import { EstadoService } from '../../services/domain/estado.service';
+import { ClienteService } from '../../services/domain/cliente.service';
 
 @IonicPage()
 @Component({
@@ -51,13 +52,15 @@ export class SignupPage {
     public formBuilder: FormBuilder,
     public menu: MenuController,
     public cidadeService: CidadeService,
-    public estadoService: EstadoService) {
+    public estadoService: EstadoService,
+    public clienteService: ClienteService,
+    public ctrl: AlertController) {
 
       this.formGroup = formBuilder.group({
         nome: ['Lua', [Validators.required, Validators.minLength(5), Validators.maxLength(120)]],
         email: ['luana@gg.com', [Validators.required, Validators.email]],
         tipo: ['1', [Validators.required]],
-        cpfOuCnpf: ['98782894604', [Validators.required, Validators.minLength(11),Validators.maxLength(14)]],
+        cpfOuCnpj: ['98782894604', [Validators.required, Validators.minLength(11),Validators.maxLength(14)]],
         senha: ['123', [Validators.required]],
         logradouro: ['Rua Via',[Validators.required]],
         numero: ['25', [Validators.required]],
@@ -74,9 +77,29 @@ export class SignupPage {
   }
 
   public signupUser(){
-    console.log("enviou o form");
+    console.log(this.formGroup.value);
+    this.clienteService.insert(this.formGroup.value)
+      .subscribe(response => {
+        this.showInsertOk();
+      },
+      error => {});
   }
-
-
+  
+  showInsertOk(): any {
+    let alert = this.ctrl.create({
+      title: 'Sucesso',
+      message: 'Cadastro efetuado com sucesso',
+      enableBackdropDismiss: false,
+      buttons: [
+        {
+          text: 'Ok',
+          handler: () => {
+            this.navCtrl.pop();
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
 
 }

@@ -36,4 +36,9 @@ export class CategoriasPage {
       }, 
       error => { });
   }
+
+  // Navega para a página de produtos
+  showProdutos(){
+    this.navCtrl.push('ProdutosPage');
+  }
 }

@@ -38,14 +38,20 @@ export class SignupPage {
 
   // Desabilita a arraste do menu quando entra na página de login
   ionViewWillEnter(){
+    console.log('vai entrar nesta pagina signup')
     this.menu.swipeEnable(false);
   }
 
   // Quando sai da página de login reabilita o arraste do menu lateral
   ionViewWillLeave(){
+    console.log('vai sair desta pagina signup')
     this.menu.swipeEnable(true);
   }
   
+  ionViewWillUnload(){
+    console.log('vai descarregar pagina signup')
+  }
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,

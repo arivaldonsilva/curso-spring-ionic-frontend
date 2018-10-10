@@ -48,5 +48,9 @@ export class ProdutosPage {
       }
   }
 
+  // Navega para a pagina de detalhes do produto
+  showDetail(item: ProdutoDTO){
+    this.navCtrl.push('ProdutoDetailPage'/*, {produto: item}*/);
+  }
 
 }

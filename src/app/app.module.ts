@@ -18,6 +18,7 @@ import { ProdutoService } from '../services/domain/produto.service';
 import localePT from '@angular/common/locales/pt';
 import localeExtraPT from '@angular/common/locales/extra/pt';
 import { registerLocaleData } from '@angular/common';
+import { CartService } from '../services/domain/cart.service';
 registerLocaleData(localePT, 'pt', localeExtraPT);
 
 @NgModule({
@@ -44,7 +45,8 @@ registerLocaleData(localePT, 'pt', localeExtraPT);
     AuthService,
     StorageService,
     ClienteService,
-    ProdutoService
+    ProdutoService,
+    CartService
   ]
 })
 export class AppModule {}

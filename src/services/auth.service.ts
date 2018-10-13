@@ -51,6 +51,7 @@ export class AuthService {
             email: this.jwtHelper.decodeToken(tok).sub
         }
         this.storage.setLocalUser(user);
+        //this.cartService.createOrClearCart();
     }
 
     // limpa a chave de autentica do local storage

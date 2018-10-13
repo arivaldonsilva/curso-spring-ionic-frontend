@@ -21,6 +21,10 @@ export class ClienteService {
         {'headers': authHeader }*/);
     }
 
+    findById(id: string){
+        return this.http.get(
+            `${API_CONFIG.baseUrl}/clientes/${id}`);
+    }
     // acessa o bucket s3 e tenta obter uma imagem do cliente cujo id é passado
     getImageFromBucket(id: string): Observable<any>{
         let url = `${API_CONFIG.bucketBaseUrl}/cp${id}.jpg`;

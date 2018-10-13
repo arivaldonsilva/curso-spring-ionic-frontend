@@ -1,0 +1,23 @@
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { PedidoDTO } from "../../models/pedido.dto";
+import { API_CONFIG } from "../../config/api.config";
+
+@Injectable()
+export class PedidoService {
+
+    constructor(public http: HttpClient){
+    }
+
+    insert(obj: PedidoDTO): Observable<any> {
+       return this.http.post(
+        `${API_CONFIG.baseUrl}/pedidos`,
+        obj,
+        {
+            observe: 'response',
+            responseType: 'text'
+        });
+    }
+    
+}

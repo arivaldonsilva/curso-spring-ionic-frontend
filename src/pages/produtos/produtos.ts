@@ -11,7 +11,10 @@ import { API_CONFIG } from '../../config/api.config';
 })
 export class ProdutosPage {
 
-  items: ProdutoDTO[];
+  items: ProdutoDTO[] = [];
+ // refresher: any;
+
+  page: number = 0;
   
 
   constructor(public navCtrl: NavController
@@ -21,17 +24,22 @@ export class ProdutosPage {
   }
 
   ionViewDidLoad() {
-   this.loadData();
+   this.loadData(null);
   }
 
-  loadData(){
+  loadData(refresher){
     let loader = this.presentLoading();
     let categoria_id = this.navParams.get('categoria_id');
-    this.produtoService.findByCategoria(categoria_id)
+    this.produtoService.findByCategoria(categoria_id, this.page, 10)
       .subscribe(response => {
         loader.dismiss();
-        this.items = response['content'];
-        this.loadImageUrls();
+        let start = this.items.length;
+        this.items = this.items.concat(response['content']);
+        let end = this.items.length - 1;
+        this.loadImageUrls(start, end);
+        if(refresher != null){
+          refresher.complete();
+        }
       }, 
       error => {
         loader.dismiss();
@@ -39,8 +47,8 @@ export class ProdutosPage {
   }
 
   // Para cada um dos produtos de uma categoria, atribui o caminho da imagem ao item do array de produtos
-  loadImageUrls(){
-    for(let i = 0; i < this.items.length; i++){
+  loadImageUrls(start: number, end: number){
+    for(let i = start; i <= end; i++){
       let item = this.items[i];
       this.produtoService.getSmallImageFromBucket(item.id)
         .subscribe(response => {
@@ -72,9 +80,17 @@ export class ProdutosPage {
   }
 
   doRefresh(refresher) {
-    this.loadData(); // Recarrega os dados de produtos
+    console.log('evento'+refresher)
+    this.page = 0;
+    this.items = [];
+    this.loadData(refresher); // Recarrega os dados de produtos
+  }
+
+  doInfinite(infiniteScroll) {
+    this.page++;
+    this.loadData(null);
     setTimeout(() => {
-      refresher.complete();
+      infiniteScroll.complete();
     }, 1000);
   }
 

@@ -5,6 +5,7 @@ import { ClienteDTO } from '../../models/cliente.dto';
 import { ClienteService } from '../../services/domain/cliente.service';
 import { API_CONFIG } from '../../config/api.config';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @IonicPage()
 @Component({
@@ -15,6 +16,7 @@ export class ProfilePage {
 
   cliente: ClienteDTO;
   picture: string;
+  profileImage: any; // imagem do avatar obtida do bucket
   cameraOn: boolean = false;
 
   constructor(
@@ -22,7 +24,9 @@ export class ProfilePage {
     public navParams: NavParams, 
     public storage: StorageService,
     public clienteService: ClienteService,
-    private camera: Camera) {
+    private camera: Camera,
+    private sanitizer: DomSanitizer) {
+      this.profileImage = 'assets/imgs/avatar-blank.png';
   }
 
   // recupera o email do usuario logado ao abrir esta tela
@@ -55,9 +59,24 @@ export class ProfilePage {
     this.clienteService.getImageFromBucket(this.cliente.id)
       .subscribe(response => {
         this.cliente.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.cliente.id}.jpg`;
-        console.log('Imagem cliente:'+this.cliente.imageUrl)
+        this.blobToDataURL(response).then(dataUrl => {
+          let str = dataUrl as string;
+          this.profileImage = this.sanitizer.bypassSecurityTrustUrl(str);
+        })
       },
-    error => {});
+    error => {
+      this.profileImage = 'assets/imgs/avatar-blank.png';
+    });
+  }
+
+  // converte blob para base64
+  blobToDataURL(blob){
+    return new Promise((fulfill, reject) => {
+      let reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = (e) => fulfill(reader.result);
+      reader.readAsDataURL(blob)
+    })
   }
 
   getCameraPicture(){
@@ -72,10 +91,10 @@ export class ProfilePage {
     
     this.camera.getPicture(options).then((imageData) => {
      this.picture = 'data:image/png;base64,' + imageData;
-     console.log(imageData);
+     console.log(this.picture);
      this.cameraOn = false;
     }, (err) => {
-     // Handle error
+     this.cameraOn = false;
     });
   }
 
@@ -92,10 +111,10 @@ export class ProfilePage {
     
     this.camera.getPicture(options).then((imageData) => {
      this.picture = 'data:image/png;base64,' + imageData;
-     console.log(imageData);
+     console.log(this.picture);
      this.cameraOn = false;
     }, (err) => {
-     // Handle error
+      this.cameraOn = false;
     });
   }
 
@@ -103,7 +122,8 @@ export class ProfilePage {
     this.clienteService.uploadPicture(this.picture)
       .subscribe(response => {
         this.picture = null;
-        this.loadData();
+        //this.loadData();
+        this.getImageIfExists();
       },
     error =>  { })
   }

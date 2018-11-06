@@ -13,7 +13,24 @@
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-    
+  
+  <ion-card>
+    <ion-card-content >
+      <ion-slides paginationClickable=true >
+        <ion-slide *ngFor="let item of items" >
+          <ion-item class="itemPosicao" color="dark">
+            Produto
+          </ion-item>
+          <ion-item  >
+            <img class="imagem" [src]="item.imageUrl || 'assets/imgs/prod.jpg'">
+          </ion-item>
+        </ion-slide>
+      </ion-slides>
+      <h1>Slide </h1>
+    </ion-card-content>
+  </ion-card>
+
+
   <ion-fab top right edge>
     <button navPush="CartPage" ion-fab mini><ion-icon name="cart"></ion-icon></button>
   </ion-fab>
@@ -23,10 +40,11 @@
           <img [src]="item.imageUrl || 'assets/imgs/prod.jpg'">
         </ion-thumbnail>
         <h2>{{ item.nome }}</h2>
-        <p>{{ item.preco | currency:"BRL":"true":"1.2" }}</p>
+        <p style="font: italic bold Georgia, serif; color: blue;">{{ item.preco | currency:"BRL":"true":"1.2" }}</p>
       </button>
-    </ion-list>
-    <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
-      <ion-infinite-scroll-content></ion-infinite-scroll-content>
-    </ion-infinite-scroll>
+  </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
